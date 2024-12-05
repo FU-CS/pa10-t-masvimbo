@@ -7,11 +7,66 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GraphTest {
-    @Test void appHasAGreeting() {
-        Graph g = new Graph();
-        g.addEdge(1, 2);
-        g.addEdge(2, 3);
-        assertEquals("1 2 3", g.topologicalSort());
-        assertEquals("1 2 3", g.topologicalSort());
+    @Test void topologicalSort() {
+        DirectedGraph graph = new DirectedGraph(6);
+        graph.addEdge(5,2);
+        graph.addEdge(5, 0);
+        graph.addEdge(4, 0);
+        graph.addEdge(4, 1);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 1);
+        String result = graph.topologicalSort();
+        assertEquals("5 4 2 3 1 0" , result);
+    }
+    @Test void topologicalSortEmptyGraph(){
+        DirectedGraph graph = new DirectedGraph(0);
+        String result = graph.topologicalSort();
+        assertEquals("", result);
+    }
+
+    @Test void kahn(){
+        DirectedGraph graph = new DirectedGraph(6);
+        graph.addEdge(5,2);
+        graph.addEdge(5, 0);
+        graph.addEdge(4, 0);
+        graph.addEdge(4, 1);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 1);
+        String result = graph.kahn();
+        assertEquals("4 5 2 0 3 1" , result);
+    }
+    @Test void kahnEmptyGraph(){
+        DirectedGraph graph = new DirectedGraph(0);
+        String result = graph.kahn();
+        assertEquals("", result);
+    }
+    @Test void kahnCyclicGraph(){
+        DirectedGraph graph = new DirectedGraph(6);
+        graph.addEdge(5,2);
+        graph.addEdge(2, 5);
+        graph.addEdge(4, 0);
+        graph.addEdge(4, 1);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 1);
+        String result = graph.kahn();
+        assertEquals("Graph has cycle" , result);
+    }
+    @Test void topologicalSortCyclicGraph(){
+        DirectedGraph graph = new DirectedGraph(6);
+        graph.addEdge(5,2);
+        graph.addEdge(2, 5);
+        graph.addEdge(4, 0);
+        graph.addEdge(4, 1);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 1);
+        String result = graph.topologicalSort();
+        assertEquals("4 2 3 5 1 0" , result);
+    }
+    @Test void singleNodeGraph() {
+        DirectedGraph graph = new DirectedGraph(1);
+        String topologicalSortResult = graph.topologicalSort();
+        String kahnResult = graph.kahn();
+        assertEquals("0", topologicalSortResult);
+        assertEquals("0", kahnResult);
     }
 }
